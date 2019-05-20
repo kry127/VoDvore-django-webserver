@@ -1,0 +1,38 @@
+[
+    {
+        "model": "mainApp.training",
+        "pk": 1,
+        "fields": {
+            "creator": 3,
+            "team": 1,
+            "date_begin": "2012-01-01",
+            "date_end": "2012-01-01",
+            "place_address": "\u041f\u0430\u0440\u0433\u043e\u043b\u043e\u0432\u0441\u043a\u0430\u044f 11/2",
+            "cost": "250.00"
+        }
+    },
+    {
+        "model": "mainApp.training",
+        "pk": 2,
+        "fields": {
+            "creator": 3,
+            "team": 2,
+            "date_begin": "2012-01-01",
+            "date_end": "2012-01-01",
+            "place_address": "\u041f\u043e\u043b\u0438\u0442\u0435\u0445\u043d\u0438\u0447\u0435\u0441\u043a\u0430\u044f 29",
+            "cost": "250.00"
+        }
+    },
+    {
+        "model": "mainApp.training",
+        "pk": 3,
+        "fields": {
+            "creator": 3,
+            "team": null,
+            "date_begin": "2012-01-01",
+            "date_end": "2012-01-01",
+            "place_address": "\u041f\u043b. \u041b\u0435\u043d\u0438\u043d\u0430",
+            "cost": "0.00"
+        }
+    }
+]

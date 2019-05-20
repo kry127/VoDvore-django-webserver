@@ -1,0 +1,80 @@
+[
+    {
+        "model": "mainApp.user",
+        "pk": 1,
+        "fields": {
+            "user_type": 1,
+            "login": "kry127",
+            "password": "1234",
+            "first_name": "Victor",
+            "last_name": "Kryshtapovich",
+            "patronic_name": "Sergeevich",
+            "document_number": 1
+        }
+    },
+    {
+        "model": "mainApp.user",
+        "pk": 2,
+        "fields": {
+            "user_type": 2,
+            "login": "vov",
+            "password": "vov",
+            "first_name": "Vova",
+            "last_name": "Vova",
+            "patronic_name": "Vovovich",
+            "document_number": 55
+        }
+    },
+    {
+        "model": "mainApp.user",
+        "pk": 3,
+        "fields": {
+            "user_type": 1,
+            "login": "vasya",
+            "password": "vasya",
+            "first_name": "Vasya",
+            "last_name": "Pupkin",
+            "patronic_name": "-",
+            "document_number": 23
+        }
+    },
+    {
+        "model": "mainApp.user",
+        "pk": 4,
+        "fields": {
+            "user_type": 1,
+            "login": "lol",
+            "password": "lol",
+            "first_name": "Kek",
+            "last_name": "Lol",
+            "patronic_name": "Che",
+            "document_number": 324
+        }
+    },
+    {
+        "model": "mainApp.user",
+        "pk": 5,
+        "fields": {
+            "user_type": 2,
+            "login": "pupa",
+            "password": "pupa",
+            "first_name": "Пупа",
+            "last_name": "Пупович",
+            "patronic_name": "",
+            "document_number": 8882
+        }
+    },
+    {
+        "model": "mainApp.user",
+        "pk": 5,
+        "fields": {
+            "user_type": 2,
+            "login": "lupa",
+            "password": "lupa",
+            "first_name": "Лупа",
+            "last_name": "Лупович",
+            "patronic_name": "",
+            "document_number": 8883
+        }
+    }
+]

@@ -1,0 +1,441 @@
+{% extends "mainApp/tablewrapper.html" %}
+
+{% block head %}
+{% load static %}
+<title>VoDvore тренировки</title>
+{% endblock %}
+
+
+<!-- Определяем боковую панель -->
+{% block side_menu %}
+<!-- https://getbootstrap.com/docs/4.3/components/button-group/ -->
+    <div class="btn-group-vertical">
+        <!-- Тренировки, Соревнования, Команды, Квалификационные документы -->
+        <a href="/trainingApp" id="btn_training" class="btn btn-primary">
+            Тренировки
+        </a>
+        <a href="/" id="btn_competition" class="btn btn-outline-primary">
+            Соревнования
+        </a>
+        <a href="/" id="btn_teams" class="btn btn-outline-primary">
+            Команды
+        </a>
+        <a href="/" id="btn_qualification_documents" class="btn btn-outline-primary">
+            Квалификационные документы
+        </a>
+    </div>
+{% endblock %}
+
+
+<!-- Определяем содержимое-->
+{% block table_view %}
+<!-- JavaScript для динамического отображения форм -->
+<script>
+
+// AJAX part
+
+// needed for CSRF
+// https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function ajax_json(method, path, urlencoded, callback, fail_callback) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4) {
+        if (this.status == 200) {
+            if (typeof(callback) == "function")
+                callback(this.responseText)
+        } else {
+            // process error
+            if (typeof(fail_callback) == "function")
+                fail_callback(this)
+            else
+                alert("Ошибка при загрузке данных: " + this.status + " " + this.statusText)
+        }
+    }
+  };
+  if (method.toUpperCase() == 'GET') {
+    xhttp.open(method, path + "?" + urlencoded, true);
+    xhttp.send();
+  } else if (method.toUpperCase() == 'POST') {
+    var csrftoken = getCookie('csrftoken');
+
+    xhttp.open(method, path, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.setRequestHeader("X-CSRFToken", csrftoken);
+    xhttp.send(urlencoded);
+  }
+}
+
+// AJAX part end
+
+// render part
+function render_user_table(elm, editable) {
+    ajax_json("GET", "/trainingApp/get_users", "", function(json_users) {
+        users = JSON.parse(json_users)
+        // render bootstrap table to "elm" container
+        var html = '<table class="table">\
+    <thead class="thead-light">\
+        <tr>\
+            <th scope="col">id</th>\
+            <th scope="col">ФИО</th>\
+            <th scope="col"></th>\
+        </tr>\
+    </thead> <tbody>'
+    
+        for (k = 0; k < users.length; k++) {
+            user = users[k]
+            id = user.pk
+            fname = user.fields.first_name + " " + user.fields.last_name
+            html += "<tr>"
+            html += "<td>" + id + "</td>"
+            html += "<td>" + fname + "</td>"
+            html += "<td>"
+            if (editable) {
+                html += '<a href="#">\
+                    <img alt="magnifier" width="32" height="32" src="{% static "image/minus.png" %}"\
+                        uid="' + id + '"\
+                        onclick=\'delete_user_from_user_table(this, this.getAttribute("uid") )\' />\
+                    </a>'
+            }
+            html += "</td>"
+        }
+        html += "</tbody></table>"
+        elm.innerHTML = html
+    })
+}
+
+function delete_user_from_user_table(elm, uid) {
+    tr = elm.parentElement.parentElement.parentElement
+    tr.parentElement.removeChild(tr)
+}
+function add_user_in_user_table() {
+    elm = $('#add_user_in_user_table_elm')[0]
+    table = $('#modalEditIndividualDialogTableContainer')
+    login = elm.value
+    // build GET request for user credentials
+    ajax_json("GET", "/trainingApp/get_user_by_login", "login=" + login,
+    function success(json_user) {
+        user = JSON.parse(json_user)[0]
+        //alert("Успешно найден пользователь " + json_user)
+        // очищаем содержимое поля
+        elm.value = ""
+        // проверяем, имеется ли пользователь на текущий момент
+        imglist = table.find("tbody").find("tr").find("a").find("img")
+        uids = imglist.map((e, v) => Number(v.getAttribute('uid')))
+        for (k = 0; k < uids.length; k++)
+            if (uids[k] == user.pk)
+                return // уже имеется
+
+        tbody = table.find("tbody")[0]
+        id = user.pk
+        fname = user.fields.first_name + " " + user.fields.last_name
+        html = "<tr>"
+        html += "<td>" + id + "</td>"
+        html += "<td>" + fname + "</td>"
+        html += "<td>"
+        html += '<a href="#">\
+            <img alt="magnifier" width="32" height="32" src="{% static "image/minus.png" %}"\
+                uid="' + id + '"\
+                onclick=\'delete_user_from_user_table(this, this.getAttribute("uid") )\' />\
+            </a>'
+        html += "</td>"
+        tbody.innerHTML += html
+    }, function fail() {
+        alert("Пользователь " + login + " не найден.")
+    })
+
+}
+
+function select_teams_dropdown(team_name, team_selected) {
+    elm = $('#modalTeamsDropdown')[0]
+    elm.setAttribute('team_id', team_selected)
+    elm.innerHTML = team_name
+}
+
+function render_teams_dropdown(elm, team_selected) {
+    ajax_json("GET", "/trainingApp/get_teams", "", function(json_teams) {
+        teams = JSON.parse(json_teams)
+        // render bootstrap table to "elm" container
+        var html = '<div class="btn-group">\
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"\
+    team_id="' + team_selected + '" id="modalTeamsDropdown">'
+    k = 0
+    for (; k < teams.length; k++)
+        if (teams[k].pk == team_selected)
+            break;
+    html += teams[k].fields.name
+    html +='\
+  </button>\
+  <div class="dropdown-menu">'
+
+    // <a class="dropdown-item" href="#">Action</a>
+    // <div class="dropdown-divider"></div>
+    
+        for (k = 0; k < teams.length; k++) {
+            team = teams[k]
+            id = team.pk
+            name = team.fields.name
+            html += '<a class="dropdown-item" '
+            html += 'onclick = "select_teams_dropdown(\'' + name + '\', ' + id + ')" '
+            html += 'href="#">'
+            html += name
+            html += '</a>'
+        }
+        html += '</div>'
+        html += '</div>'
+        elm.innerHTML = html
+    })
+}
+
+// render part end
+
+
+// validation part
+function validate_modalEditDialog(mode) {
+    // mode = 1 -- team, mode = 2 -- individual
+    infix = mode == 1 ? "Team" : mode == 2 ? "Individual" : ""
+    place_address = $('#modalEdit' + infix + 'DialogAddress')[0].value
+    cost = Number($('#modalEdit' + infix + 'DialogCost')[0].value)
+    $('#modalEdit' + infix + 'DialogCost')[0].value = cost // no u
+    date_begin = $('#modalEdit' + infix + 'DialogDateBegin')[0].value
+    date_end = $('#modalEdit' + infix + 'DialogDateEnd')[0].value
+
+    team_id = null
+    uids = null
+    if (mode == 1)
+        team_id =  $('#modalTeamsDropdown')[0].getAttribute('team_id')
+    else if (mode == 2) {
+        table = $('#modalEditIndividualDialogTableContainer')
+        // проверяем, имеется ли пользователь на текущий момент
+        imglist = table.find("tbody").find("tr").find("a").find("img")
+        uids = new Set(imglist.map((e, v) => Number(v.getAttribute('uid'))))
+        
+    }
+
+    if (date_begin > date_end) {
+        alert('Дата начала не может быть позже даты конца!')
+        return
+    }
+    if (cost < 0) {
+        alert('Стоимость тренировки не может быть отрицательной')
+        return
+    } 
+    if (cost > 1000000000000) {
+        alert('Стоимость тренировки слишком велика')
+        return
+    }
+
+    // protect form from modification
+    $('#modalEmpty').modal({backdrop: 'static'})
+
+    url_enc = "place_address=" + place_address +
+        "&cost=" + cost +
+        "&date_begin=" + date_begin +
+        "&date_end=" + date_end
+    
+    if (mode == 1)
+        url_enc += "&team=" + team_id
+    else if (mode == 2) {
+        // serialize
+        url_enc += "&uids=" + Array.from(uids).join(',')  
+    }
+
+    // validation ready, start transaction
+    ajax_json("POST",
+        "/trainingApp/edit_training",
+         url_enc,
+        function(json) {
+            // if success, refresh
+            document.location.reload()
+        }, function(err) {
+            alert("Ошибка при загрузке данных: " + err.status + " " + err.statusText)
+            // unblock page on error
+            $('#modalEmpty').modal('hide')
+        }
+    )
+}
+
+// end validation part
+
+function view_training(id, is_individual=false) {
+    if (typeof(is_individual) != 'boolean')
+        is_individual = is_individual.trim().toLowerCase() == 'false' ? false : true
+
+    //alert("View, id=" + id + ", is_individual=" + is_individual)
+    //load_training_info(id, "view", is_individual, function(json) {
+    ajax_json("GET",
+        "/trainingApp/get_training",
+        "oid=" + id + "&mode=view&is_individual=" + is_individual,
+        function(json) {
+            json = JSON.parse(json)
+            // add script for showing view form
+            // https://getbootstrap.com/docs/4.0/components/modal/
+            $('#modalViewIndividualDialog').modal('show')
+            $('#modalViewIndividualDialogAddress')[0].value = json[0].fields.place_address
+            $('#modalViewIndividualDialogCost')[0].value = json[0].fields.cost
+            $('#modalViewIndividualDialogDateBegin')[0].value = json[0].fields.date_begin
+            $('#modalViewIndividualDialogDateEnd')[0].value = json[0].fields.date_end
+
+            // fill in container
+            render_user_table($('#modalViewIndividualDialogTableContainer')[0], false)
+
+            // https://getbootstrap.com/docs/4.1/utilities/visibility/
+            // use global var for hiding button
+            is_individual_global = is_individual
+        }
+    )
+}
+
+function edit_training(id) {
+    //alert("Edit, id=" + id)
+    ajax_json("GET",
+    "/trainingApp/get_training",
+    "oid=" + id + "&mode=edit",
+        function(json) {
+            json = JSON.parse(json)
+            // determine, which form to show
+            is_team = json[0].fields.team != null
+            if (is_team) {
+                $('#modalEditTeamDialog').modal('show')
+                $('#modalEditTeamDialogAddress')[0].value = json[0].fields.place_address
+                $('#modalEditTeamDialogCost')[0].value = json[0].fields.cost
+                $('#modalEditTeamDialogDateBegin')[0].value = json[0].fields.date_begin
+                $('#modalEditTeamDialogDateEnd')[0].value = json[0].fields.date_end
+                
+                // fill in container
+                render_teams_dropdown($('#modalEditTeamDialogTeam')[0], json[0].fields.team)
+
+            } else {
+                $('#modalEditIndividualDialog').modal('show')
+                $('#modalEditIndividualDialogAddress')[0].value = json[0].fields.place_address
+                $('#modalEditIndividualDialogCost')[0].value = json[0].fields.cost
+                $('#modalEditIndividualDialogDateBegin')[0].value = json[0].fields.date_begin
+                $('#modalEditIndividualDialogDateEnd')[0].value = json[0].fields.date_end
+
+                // fill in container
+                render_user_table($('#modalEditIndividualDialogTableContainer')[0], true)
+                
+                table_container = $('#modalEditIndividualDialogTableContainer')
+                // fill in container
+            }
+        }
+    )
+}
+
+function add_training() {
+    alert("Add training")
+}
+
+function confirm_abandon(state=0) {
+    // state 0 -- show
+    // state 1 -- yes (abandon)
+    // state 2 -- no (cancel abandon)
+    switch(state) {
+    case 0:
+        $('#modalAbandonConfirm').modal({backdrop: 'static'})
+        break;
+    case 1:
+        // protect form from modification
+        $('#modalEmpty').modal({backdrop: 'static'})
+    
+        // insert code for abandon
+        ajax_json("GET", "/trainingApp/abandon_training", "",
+            function () {
+                // refresh page for changes
+                document.location.reload()
+            }, function() {
+                // process error (just don't refresh and hide protection modal popup)
+                $('#modalEmpty').modal('hide')
+            })
+        break;
+    }
+}
+</script>
+
+<!-- Modal -->
+{% include "trainingApp/modal/modalViewIndividualDialog.html" %}
+{% include "trainingApp/modal/modalEditIndividualDialog.html" %}
+{% include "trainingApp/modal/modalEditTeamDialog.html" %}
+{% include "trainingApp/modal/modalAbandonConfirm.html" %}
+{% include "trainingApp/modal/modalEmpty.html" %}
+
+
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Адрес</th>
+            <th scope="col">Стоимость</th>
+            <th scope="col">Начало</th>
+            <th scope="col">Окончание</th>
+            <th scope="col"></th>
+            <th scope="col">
+                {% if user_type == 1%}
+                    <a href="#" onclick='add_training()'>
+                        <img alt="plus" width="32" height="32" src="{% static 'image/plus.png' %}" />
+                    </a>
+                {% endif %}
+            </th>
+        </tr>
+    </thead>
+    {% for item in training_list_full %}
+    <tr> 
+        <td scope="row">{{ item.id }}</td>
+        <td>{{ item.place_address }}</td>
+        <td>{{ item.cost }}</td>
+        <td>{{ item.date_begin }}</td>
+        <td>{{ item.date_end }}</td>
+        <td>
+            {% if item in training_list_individual or item in training_list_team%}
+                <a href="#">
+                    <img alt="magnifier" width="32" height="32" src="{% static 'image/magnifier.png' %}"
+                        trid="{{ item.id }}"
+                        trind="{% if item in training_list_individual %} true {% else %} false {% endif %}"
+                        onclick='view_training(this.getAttribute("trid"), this.getAttribute("trind") )' />
+                </a>
+            {% endif %}
+        </td>
+        <td>
+            {% if item in training_list_owner %}
+                <a href="#">
+                    <img alt="pencil" width="32" height="32" src="{% static 'image/pencil.png' %}"
+                    trid="{{ item.id }}"
+                    onclick='edit_training(this.getAttribute("trid") )' />
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+// add hook to modal
+$(document).ready(function() {
+    is_individual_global = true
+    function hook(e) {
+        if (is_individual_global) {
+            $('#modalViewIndividualDialogAbandon').removeClass('invisible')
+        } else {
+            $('#modalViewIndividualDialogAbandon').addClass('invisible')
+        }
+    }
+    $('#modalViewIndividualDialog').on('shown.bs.modal', hook)
+});
+</script>
+    
+{% endblock %}

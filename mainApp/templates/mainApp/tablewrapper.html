@@ -1,0 +1,24 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block head %}
+{% load static %}
+<title>VoDvore</title>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row">
+        <!-- https://getbootstrap.com/docs/4.0/utilities/borders/ -->
+        <div class="col-sm border-0">
+            {% block side_menu %}
+            {% endblock %}
+        </div>
+        <div class="col-9 border border-dark">
+            {% block table_view %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

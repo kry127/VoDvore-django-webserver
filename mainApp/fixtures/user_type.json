@@ -1,0 +1,4 @@
+[
+    {"model": "mainApp.user_type", "pk": 1, "fields": {"user_type": "Tr"}},
+    {"model": "mainApp.user_type", "pk": 2, "fields": {"user_type": "Sp"}}
+]

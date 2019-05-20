@@ -1,0 +1,26 @@
+[
+    {
+        "model": "mainApp.team",
+        "pk": 1,
+        "fields": {
+            "creator": 3,
+            "name": "Non-human"
+        }
+    },
+    {
+        "model": "mainApp.team",
+        "pk": 2,
+        "fields": {
+            "creator": 3,
+            "name": "Friendlab"
+        }
+    },
+    {
+        "model": "mainApp.team",
+        "pk": 3,
+        "fields": {
+            "creator": 3,
+            "name": "All stars"
+        }
+    }
+]

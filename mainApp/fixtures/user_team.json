@@ -1,0 +1,83 @@
+[
+    {
+        "model": "mainApp.user_team",
+        "pk": 1,
+        "fields": {
+            "user": 2,
+            "role": 3,
+            "team": 1
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 2,
+        "fields": {
+            "user": 4,
+            "role": 3,
+            "team": 1
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "role": 1,
+            "team": 1
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 5,
+        "fields": {
+            "user": 1,
+            "role": 3,
+            "team": 2
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 6,
+        "fields": {
+            "user": 2,
+            "role": 3,
+            "team": 2
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 7,
+        "fields": {
+            "user": 1,
+            "role": 4,
+            "team": 3
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 8,
+        "fields": {
+            "user": 2,
+            "role": 3,
+            "team": 3
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 9,
+        "fields": {
+            "user": 3,
+            "role": 1,
+            "team": 3
+        }
+    },
+    {
+        "model": "mainApp.user_team",
+        "pk": 10,
+        "fields": {
+            "user": 4,
+            "role": 3,
+            "team": 3
+        }
+    }
+]

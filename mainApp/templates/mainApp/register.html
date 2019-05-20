@@ -1,0 +1,28 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block head %}
+{% load static %}
+<title>Регистрация</title>
+<link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css" >
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="login_bg">
+    <div class="div_form w-50">
+        <form class="p-3" action="registration/register" method="post">
+            
+            {% csrf_token %}
+            <table>
+                <tbody>
+                        {{ register_form }}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-success mt-3">Зарегистрироваться</button>
+            <br />
+            <a href="javascript:history.back()" class="btn btn-warning mt-3">Назад</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

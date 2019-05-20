@@ -1,0 +1,72 @@
+<div class="modal fade" id="modalViewIndividualDialog" tabindex="-1" role="dialog" aria-labelledby="modalViewIndividualDialogTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form action="/" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title modal-lg" id="modalViewIndividualDialogTitle">Просмотр тренировки</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body p-2">
+                    <div class = "row p-1">
+                        <div class="col-3 text-right">
+                            <span class="badge badge-secondary">Адрес</span>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" class="form-control" id="modalViewIndividualDialogAddress" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class = "row p-1">
+                        <div class="col-3 text-right">
+                            <span class="badge badge-secondary">Стоимось</span>
+                        </div>
+                        <div class="col-8">
+                            <input type="number" class="form-control"  id="modalViewIndividualDialogCost"
+                            min="0" max="99999999999999" step="0.01" disabled>
+                        </div>
+                    </div>
+                    
+                    <div class = "row p-1">
+                        <div class="col-3 text-right">
+                            <span class="badge badge-secondary">Начало</span>
+                        </div>
+                        <div class="col-8">
+                            <input type="date" class="form-control" id="modalViewIndividualDialogDateBegin" disabled>
+                        </div>
+                    </div>
+
+                    <div class = "row p-1">
+                        <div class="col-3 text-right">
+                            <span class="badge badge-secondary">Окончание</span>
+                        </div>
+                        <div class="col-8">
+                            <input type="date" class="form-control"  id="modalViewIndividualDialogDateEnd" disabled> 
+                        </div>
+                    </div>
+                    
+                    <div class = "row p-1">
+                        <div class="col-3 text-right">
+                            <span class="badge badge-secondary">Участники</span>
+                        </div>
+                    </div>
+
+                    <div class = "row p-1">
+                            <div class="col">
+                                <span id="modalViewIndividualDialogTableContainer"></span>
+                            </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-danger" id='modalViewIndividualDialogAbandon' onclick="confirm_abandon()">Покинуть тренировку</button>
+                </div>
+            
+            </form>
+        </div>
+    </div>
+</div>

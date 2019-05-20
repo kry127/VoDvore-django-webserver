@@ -1,0 +1,31 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block head %}
+{% load static %}
+<title>Авторизация</title>
+<link rel="stylesheet" href="{% static 'css/mainapp.css' %}" type="text/css" >
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="login_bg">
+    <div class="div_form w-50">
+        <form class="p-3" action="authorization" method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                {% if Login_error %} {{Login_error}} {% endif %}
+                <input type="text" class="form-control" id="input_login" name="login" required aria-describedby="loginHelp" placeholder="Логин" {% if Login %} value="{{ Login | safe }}" {% endif %}>
+                <small hidden id="loginHelp" class="form-text text-muted">Необходимо ввести существующее имя пользователя</small>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Пароль">
+            </div>
+            <button type="submit" class="btn btn-success">Авторизация</button>
+            <br />
+            <a href="/registration" class="btn btn-primary mt-3">Регистрация</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

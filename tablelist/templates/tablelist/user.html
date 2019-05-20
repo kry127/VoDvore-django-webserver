@@ -1,0 +1,35 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block content %}
+ <p> form add_user test</p>
+ <form action="user/add_user" method="post">
+    {% csrf_token %}
+    <table>
+        <tbody>
+                {{ user_form }}
+        </tbody>
+    </table>
+    <input type="submit" value="Add user">
+</form>
+
+<table>
+    <tr>
+        <th></th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>№ документа</th>
+    </tr>
+    {% for item in user_list %}
+    <tr> 
+        <td>{{ item.user_type }}</td>
+        <td>{{ item.last_name }}</td>
+        <td>{{ item.first_name }}</td>
+        <td>{{ item.patronic_name }}</td>
+        <td>{{ item.document_number }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

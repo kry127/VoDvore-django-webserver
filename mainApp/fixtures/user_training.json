@@ -1,0 +1,38 @@
+[
+    {
+        "model": "mainApp.user_training",
+        "pk": 1,
+        "fields": {
+            "training": 3,
+            "user": 1,
+            "registration_date": "2012-01-01"
+        }
+    },
+    {
+        "model": "mainApp.user_training",
+        "pk": 2,
+        "fields": {
+            "training": 3,
+            "user": 2,
+            "registration_date": "2012-01-01"
+        }
+    },
+    {
+        "model": "mainApp.user_training",
+        "pk": 3,
+        "fields": {
+            "training": 3,
+            "user": 3,
+            "registration_date": "2012-01-01"
+        }
+    },
+    {
+        "model": "mainApp.user_training",
+        "pk": 4,
+        "fields": {
+            "training": 3,
+            "user": 4,
+            "registration_date": "2012-01-01"
+        }
+    }
+]

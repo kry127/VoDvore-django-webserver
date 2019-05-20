@@ -1,0 +1,30 @@
+.login_bg { 
+    background-color: rgba(255, 255, 255, 0.3);
+
+    text-align: center;
+  
+    /* Center and scale the image nicely */
+    /* http://qaru.site/questions/6053/css-background-image-opacity */
+    position: relative;
+    z-index:1;
+    overflow:hidden; /*if you want to crop the image*/
+  }
+
+.login_bg::before {
+    z-index:-1;
+    position:absolute;
+    left:0;
+    bottom:-5;
+    
+    /* The image used */
+    content: url("/static/mainApp/image/dvor.jpg");
+    opacity:0.4;
+}
+
+.div_form {
+    background-color: rgba(255, 255, 255, 0.25);
+
+    display: inline-block;
+    opacity: 1.0;
+    max-width: 420px;
+}

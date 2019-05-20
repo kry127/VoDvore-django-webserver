@@ -1,0 +1,26 @@
+{% extends "mainApp/tablewrapper.html" %}
+
+<!-- Определяем боковую панель -->
+{% block side_menu %}
+<!-- https://getbootstrap.com/docs/4.3/components/button-group/ -->
+    <div class="btn-group-vertical">
+        <!-- Тренировки, Соревнования, Команды, Квалификационные документы -->
+        <a href="/trainingApp" id="btn_training" class="btn btn-outline-primary">
+            Тренировки
+        </a>
+        <a href="/" id="btn_competition" class="btn btn-outline-primary">
+            Соревнования
+        </a>
+        <a href="/" id="btn_teams" class="btn btn-outline-primary">
+            Команды
+        </a>
+        <a href="/" id="btn_qualification_documents" class="btn btn-outline-primary">
+            Квалификационные документы
+        </a>
+    </div>
+{% endblock %}
+
+<!-- Определяем содержимое-->
+{% block table_view %}
+<h3>Выберите пункт меню для продолжения работы</h3>
+{% endblock %}

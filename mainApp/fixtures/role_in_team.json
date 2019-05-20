@@ -1,0 +1,7 @@
+[
+    {"model": "mainApp.role_in_team", "pk": 1, "fields": {"role_in_team": "Tr"}},
+    {"model": "mainApp.role_in_team", "pk": 2, "fields": {"role_in_team": "TH"}},
+    {"model": "mainApp.role_in_team", "pk": 3, "fields": {"role_in_team": "Pl"}},
+    {"model": "mainApp.role_in_team", "pk": 4, "fields": {"role_in_team": "Pa"}},
+    {"model": "mainApp.role_in_team", "pk": 5, "fields": {"role_in_team": "Ju"}}
+]
